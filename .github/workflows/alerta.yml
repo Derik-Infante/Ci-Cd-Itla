@@ -1,0 +1,24 @@
+name: Alerta a ntfy
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Ejecutar Hola Mundo
+        run: echo "Hola mundo desde GitHub Actions"
+
+      - name: Notificar a ntfy (devops-itla)
+        run: |
+          COMMIT_URL="${{ github.server_url }}/${{ github.repository }}/commit/${{ github.sha }}"
+          curl -s -X POST "https://ntfy.sh/devops-itla" \
+            -H "Title: Push a main" \
+            -H "Tags: github,ci,cd" \
+            -d "Repo: ${{ github.repository }} | Usuario: ${{ github.actor }} | Commit: ${COMMIT_URL}"
